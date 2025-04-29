@@ -54,10 +54,22 @@
     // Get the form data
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $_POST['name'];
+        $nameId = $_POST['nameId'];
+        $action = $_POST['action'];
 
-        // Prepare the SQL statement
-        $stmt = $conn->prepare("INSERT INTO your_table (name) VALUES (?)");
-        $stmt->bind_param("s", $name); // 's' specifies the variable type => 'string'
+        if ($action == 'add') {
+            // Prepare the SQL statement
+            $stmt = $conn->prepare("INSERT INTO your_table (name) VALUES (?)");
+            $stmt->bind_param("s", $name); // 's' specifies the variable type => 'string'
+        } elseif ($action == 'update') {
+            // Prepare the SQL statement for update
+            $stmt = $conn->prepare("UPDATE your_table SET name = ? WHERE id = ?");
+            $stmt->bind_param("si", $name, $nameId); // 'si' specifies the variable types => 'string', 'integer'
+        } elseif ($action == 'delete') {
+            // Prepare the SQL statement for delete
+            $stmt = $conn->prepare("DELETE FROM your_table WHERE id = ?");
+            $stmt->bind_param("i", $nameId); // 'i' specifies the variable type => 'integer'
+        }
 
         // Execute the SQL statement
         $stmt->execute();
@@ -70,6 +82,8 @@
 
     <label for="nameInput">Enter your name:</label><br>
     <input type="text" id="nameInput">
+    <input type="hidden" id="nameId" name="nameId">
+    <input type="hidden" id="action" name="action">
     <button onclick="addName()">Enter</button>
     <button onclick="editName()">Edit</button>
     <button onclick="deleteName()">Delete</button>
