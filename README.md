@@ -1,4 +1,1 @@
-hwo the heck i use php??lol
-this is all lie
-
-all use aii
+error on many thing, i am just so stupid
